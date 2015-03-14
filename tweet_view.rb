@@ -6,6 +6,8 @@ class TweetView
 
   def render
     @screen.write_text(0, 0, @tweet.username.rjust(15) + " ")
-    @screen.write_text(0, 16, @tweet.text)
+    @tweet.lines.each_with_index do |line, index|
+      @screen.write_text(index, 16, line)
+    end
   end
 end

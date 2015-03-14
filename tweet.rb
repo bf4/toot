@@ -5,4 +5,9 @@ class Tweet
     @username = username
     @text = text
   end
+
+
+  def lines
+    @text.split("\n")
+  end
 end

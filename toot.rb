@@ -15,10 +15,15 @@ module PrivateUser
   end
 end
 
+module FollowedUser
+
+end
+
 # Fancy conditional tricks (Perl)
 # Ad-hoc polymorphism (Java)
 # Pattern Matching (Erlang)
 # Subtype Polymorphism (Java, Smalltalk)
+# Dynamic object extension (Ruby)
 
 class Follow
   def self.follow(user)

@@ -1,18 +1,27 @@
-class User < Struct.new(:username, :private)
-  alias_method :private?, :private
+class User < Struct.new(:username)
+  def follow
+    Follow.actually_follow(self)
+  end
+end
+
+PrivateFollowedUser
+PublicFollowedUser
+PrivateUnfollowedUser
+PublicUnfollowedUser
+
+module PrivateUser
+  def follow
+    Follow.actually_follow(self) if Follow.confirm_follow(self)
+  end
 end
 
 # Fancy conditional tricks (Perl)
 # Ad-hoc polymorphism (Java)
 # Pattern Matching (Erlang)
-#
+# Subtype Polymorphism (Java, Smalltalk)
 
 class Follow
-  def self.follow(user | user.private?)
-    actually_follow(user) if confirm_follow(user)
-  end
-
   def self.follow(user)
-    actually_follow(user)
+    user.follow
   end
 end

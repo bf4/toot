@@ -19,8 +19,9 @@ class World < Value.new(:timeline)
 end
 
 class Toot
-  def initialize(screen)
+  def initialize(screen, using_network: true)
     @screen = screen
+    @using_network = using_network
   end
 
   def run
@@ -29,7 +30,7 @@ class Toot
     database = Database.default
     timeline = Timeline.new(database.timeline)
     timeline_queue = SelectableQueue.new
-    start_timeline_stream(timeline, timeline_queue)
+    start_timeline_stream(timeline, timeline_queue) if @using_network
     world = World.new(timeline)
 
     view = TimelineView.new(@screen)
@@ -179,6 +180,14 @@ end
 
 if $0 == __FILE__
   Thread.abort_on_exception = true
+  config = Class.new do
+    def initialize(args)
+      @args = args
+    end
+    def using_network
+      !@args.include?("--without-network")
+    end
+  end.new(ARGV.to_a)
 
   # world = World.blank(options)
   Screen.with_screen do |screen|
@@ -187,7 +196,7 @@ if $0 == __FILE__
     #   render(world, screen, start_line)
     #   world = handle_key(world)
     # end
-    Toot.new(screen).run
+    Toot.new(screen, using_network: config.using_network).run
     # screen.move_cursor(screen.height - 1, 0)
   end
   # puts world.selection
